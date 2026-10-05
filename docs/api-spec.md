@@ -39,9 +39,13 @@
   "status_id": 1,
   "due_date": "2025-12-01",
   "estimated_minutes": 60,
-  "progress": 0
+  "progress": 0,
+  "created_at": "2025-11-20 09:00",
+  "completed_at": null
 }
 \`\`\`
+
+※ created_at（作成日時）は、タスクを作ったときに自動で入る。completed_at（完了日時）は、完了するまで null（空）になる。
 
 ### GET /tasks（タスク一覧を取得する）
 
@@ -63,7 +67,9 @@
     "status_id": 1,
     "due_date": "2025-12-01",
     "estimated_minutes": 60,
-    "progress": 0
+    "progress": 0,
+    "created_at": "2025-11-20 09:00",
+    "completed_at": null
   },
   {
     "task_id": 16,
@@ -72,9 +78,48 @@
     "status_id": 2,
     "due_date": "2025-12-05",
     "estimated_minutes": 120,
-    "progress": 50
+    "progress": 50,
+    "created_at": "2025-11-21 10:30",
+    "completed_at": null
+  },
+  {
+    "task_id": 17,
+    "title": "企業説明会の予約",
+    "tag_id": 1,
+    "status_id": 3,
+    "due_date": "2025-11-25",
+    "estimated_minutes": 15,
+    "progress": 100,
+    "created_at": "2025-11-20 09:30",
+    "completed_at": "2025-11-22 18:00"
   }
 ]
+\`\`\`
+
+### PUT /tasks/{タスクID}（タスクを更新する：完了にする例）
+
+状態を完了（status_idが3）に変えたとき、completed_at に、そのときの日時が自動で入る。
+
+リクエスト（PUT /tasks/16）:
+\`\`\`json
+{
+  "status_id": 3
+}
+\`\`\`
+
+レスポンス:
+\`\`\`json
+{
+  "task_id": 16,
+  "title": "レポート提出",
+  "tag_id": 2,
+  "status_id": 3,
+  "due_date": "2025-12-05",
+  "estimated_minutes": 120,
+  "progress": 50,
+  "created_at": "2025-11-21 10:30",
+  "completed_at": "2025-12-04 20:00"
+}
 \`\`\`
 
 ## バリデーションルール
