@@ -52,7 +52,7 @@
 
 Figmaでは5画面分のワイヤーフレームを作成済み（ログイン、会員登録、タスク一覧、タスク入力、進捗確認）。このうちMVPで実際に使用するのは「タスク一覧画面」「タスク入力画面」の2画面。ログイン・会員登録・進捗確認の3画面は、将来的な機能拡張（Could）時に使用する想定。
 
-Figmaリンク：（ここにあなたのFigmaのリンクを貼り付け）
+Figmaリンク：[Figmaで見る](https://www.figma.com/design/y40bJxE9KZVL7SDDwE5Jgd/%E7%84%A1%E9%A1%8C?node-id=0-1&t=yTlzt4KPgZPNEbWP-1)
 
 ### 画面遷移図（MVP最終版）
 
