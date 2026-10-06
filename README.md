@@ -10,12 +10,12 @@
 
 アルバイトを掛け持ちしながら、大学の課題・ゼミ・就職活動を両立させている大学3〜4年生
 
-## MVP機能
+## MVP機能（Must）
 
 - ①タスクに期限を設定できる
 - ②締め切りの近いタスク順に並び替えられる
 - ③就活用・学校用で分けて表示できる
-- ④タスクの名前を直せる
+- ④タスクを完了にできる
 - ⑤タスクを削除できる
 
 ## 資料・リンク
@@ -34,7 +34,6 @@
 | 技術選定資料 | [docs/tech-stack.md](docs/tech-stack.md) |
 | 開発ボード（GitHub Projects） | [MyFlow開発ボード](https://github.com/users/shio-0415/projects/1/views/1) |
 | タスク一覧（GitHub Issues） | [Issues](https://github.com/shio-0415/myflow/issues) |
-
 
 ## 開発計画
 
