@@ -74,4 +74,4 @@ Figmaリンク：[Figmaで見る](https://www.figma.com/design/y40bJxE9KZVL7SDDw
 1. 開発体制は個人で行うこととする
 2. 予算は有料のサービスを使わないこととする
 3. 開発期間は3週間で開発からデプロイまで完了させることとする
-4. 技術スタックは、Week1〜17で学んだ範囲と学校で学習したHTML、CSS、JavaScriptの範囲で使用可能なものとする
+4. 技術スタックは、HTML、CSS、JavaScriptを使い、データの保存先は localStorage とする（詳細は tech-stack.md を参照）
