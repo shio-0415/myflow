@@ -74,3 +74,28 @@ php artisan serve
 ### 補足
 
 docs の設計書は、データの保存先を localStorage として書いたもの。Laravel での実装に合わせて見直す予定。
+
+## Week23：機能拡張とUI
+
+Week22 の実装に、次の機能を追加した。
+
+### 追加した機能
+
+- 編集・削除（Policy による権限管理：自分のタスクだけ操作できる）
+- 完了にする（状態を「完了」にすると、完了日時が入る）
+- 検索・絞り込み（キーワード・タグ・状態）と並び替え（期限の近い順・遠い順）
+- お気に入り（重要マーク）：ページを切り替えずに付けたり外したりできる（Ajax / Alpine.js）
+- カード形式の一覧（Tailwind CSS）とレスポンシブ対応
+- N+1 対策（`with(['tag', 'status'])` と、お気に入りの ID 一覧を最初に 1 回だけ取得）
+
+### スクリーンショット（PC）
+
+| 一覧 | 詳細 | 編集 |
+|---|---|---|
+| ![一覧](screenshots/week23-pc-index.png) | ![詳細](screenshots/week23-pc-show.png) | ![編集](screenshots/week23-pc-edit.png) |
+
+### スクリーンショット（スマホ）
+
+| 一覧 | 詳細 |
+|---|---|
+| ![一覧（スマホ）](screenshots/week23-sp-index.png) | ![詳細（スマホ）](screenshots/week23-sp-show.png) |

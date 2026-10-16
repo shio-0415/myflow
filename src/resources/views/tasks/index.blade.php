@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             @if (session('status'))
                 <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">{{ session('status') }}</div>
             @endif
@@ -13,7 +13,7 @@
                 <a href="{{ route('tasks.create') }}" class="inline-block px-4 py-2 bg-gray-800 text-white rounded">＋ タスクを登録する</a>
             </div>
 
-            <form method="GET" action="{{ route('tasks.index') }}" class="mb-4 p-4 bg-white shadow-sm sm:rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <form method="GET" action="{{ route('tasks.index') }}" class="mb-6 p-4 bg-white shadow-sm rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                     <label for="search" class="block text-sm font-medium">キーワード</label>
                     <input id="search" name="search" type="text" value="{{ request('search') }}" class="w-full border-gray-300 rounded">
@@ -53,28 +53,23 @@
                 </div>
             </form>
 
-            <div class="bg-white shadow-sm sm:rounded-lg divide-y">
-                @forelse ($tasks as $task)
-                    <a href="{{ route('tasks.show', $task) }}" class="block p-4 hover:bg-gray-50">
-                        <div class="font-semibold">{{ $task->title }}</div>
-                        <div class="text-sm text-gray-600">
-                            期限：{{ $task->due_date->format('Y/m/d H:i') }}
-                            ／ {{ $task->tag->name }}
-                            ／ {{ $task->status->name }}
-                        </div>
-                    </a>
-                @empty
-                    <div class="p-4 text-gray-600">
-                        @if (request()->hasAny(['search', 'tag_id', 'status_id']))
-                            条件に合うタスクがありません。
-                        @else
-                            まだタスクがありません。
-                        @endif
-                    </div>
-                @endforelse
-            </div>
+            @if ($tasks->isEmpty())
+                <div class="p-6 bg-white shadow-sm rounded-lg text-gray-600">
+                    @if (request()->hasAny(['search', 'tag_id', 'status_id']))
+                        条件に合うタスクがありません。
+                    @else
+                        まだタスクがありません。
+                    @endif
+                </div>
+            @else
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach ($tasks as $task)
+                        <x-task-card :task="$task" :favorited="in_array($task->id, $favoriteIds)" />
+                    @endforeach
+                </div>
+            @endif
 
-            <div class="mt-4">{{ $tasks->links() }}</div>
+            <div class="mt-6">{{ $tasks->links() }}</div>
         </div>
     </div>
 </x-app-layout>

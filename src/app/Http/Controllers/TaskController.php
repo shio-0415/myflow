@@ -40,7 +40,9 @@ class TaskController extends Controller
         $tags = Tag::all();
         $statuses = Status::all();
 
-        return view('tasks.index', compact('tasks', 'tags', 'statuses'));
+        $favoriteIds = auth()->user()->favoriteTasks()->pluck('tasks.id')->all();
+
+        return view('tasks.index', compact('tasks', 'tags', 'statuses', 'favoriteIds'));
     }
 
     public function create()
