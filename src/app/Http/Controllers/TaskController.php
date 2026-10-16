@@ -7,18 +7,40 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
 use App\Models\Tag;
 use App\Models\Task;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::with(['tag', 'status'])
-            ->where('user_id', auth()->id())
-            ->orderBy('due_date')
-            ->paginate(5);
+        $query = Task::with(['tag', 'status'])
+            ->where('user_id', auth()->id());
 
-        return view('tasks.index', compact('tasks'));
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('tag_id')) {
+            $query->where('tag_id', $request->tag_id);
+        }
+
+        if ($request->filled('status_id')) {
+            $query->where('status_id', $request->status_id);
+        }
+
+        $sort = $request->get('sort', 'due_asc');
+        if ($sort === 'due_desc') {
+            $query->orderBy('due_date', 'desc');
+        } else {
+            $query->orderBy('due_date', 'asc');
+        }
+
+        $tasks = $query->paginate(5)->withQueryString();
+        $tags = Tag::all();
+        $statuses = Status::all();
+
+        return view('tasks.index', compact('tasks', 'tags', 'statuses'));
     }
 
     public function create()
