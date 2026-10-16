@@ -38,3 +38,39 @@
 ## 開発計画
 
 Week22〜24（10月12日〜30日）の3スプリントで開発する。詳細は[docs/sprint-plan.md](docs/sprint-plan.md)を参照。
+## Week22：実装（Laravel）
+
+`src/` に、Laravel（Breeze）で作ったアプリが入っている。
+
+### 実装した機能
+
+- 認証（Laravel Breeze：登録・ログイン・ログアウト）
+- タスクの登録・一覧・詳細
+- バリデーション（タイトル・期限・タグは必須。画像は2MBまで）
+- 画像アップロード
+- ページネーション（1ページ5件）
+
+### スクリーンショット
+
+| 登録 | 一覧 | 詳細 |
+|---|---|---|
+| ![登録](screenshots/register.png) | ![一覧](screenshots/index.png) | ![詳細](screenshots/show.png) |
+
+### 動かし方
+
+```
+cd src
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate --seed
+php artisan storage:link
+npm run build
+php artisan serve
+```
+
+### 補足
+
+docs の設計書は、データの保存先を localStorage として書いたもの。Laravel での実装に合わせて見直す予定。
