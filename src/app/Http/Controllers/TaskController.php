@@ -75,7 +75,9 @@ class TaskController extends Controller
 
         $task->load(['tag', 'status']);
 
-        return view('tasks.show', compact('task'));
+        $isFavorited = auth()->user()->favoriteTasks()->where('task_id', $task->id)->exists();
+
+        return view('tasks.show', compact('task', 'isFavorited'));
     }
 
     public function edit(Task $task)

@@ -20,5 +20,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
+    Route::post('tasks/{task}/favorite', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('tasks.favorite');
     Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 });

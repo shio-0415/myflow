@@ -10,7 +10,31 @@
             @endif
 
             <div class="bg-white p-6 shadow-sm sm:rounded-lg space-y-3">
-                <h3 class="text-lg font-semibold">{{ $task->title }}</h3>
+                <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-lg font-semibold">{{ $task->title }}</h3>
+
+                    <div x-data="{
+                        favorited: {{ $isFavorited ? 'true' : 'false' }},
+                        toggleFavorite() {
+                            fetch('{{ route('tasks.favorite', $task) }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').content,
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(data => { this.favorited = data.favorited; });
+                        }
+                    }">
+                        <button type="button" @click="toggleFavorite()"
+                                :class="favorited ? 'text-yellow-500' : 'text-gray-400'"
+                                class="text-3xl leading-none" aria-label="重要マーク">
+                            <span x-text="favorited ? '★' : '☆'"></span>
+                        </button>
+                    </div>
+                </div>
+
                 <p>期限：{{ $task->due_date->format('Y/m/d H:i') }}</p>
                 <p>タグ：{{ $task->tag->name }}</p>
                 <p>状態：{{ $task->status->name }}</p>
