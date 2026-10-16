@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
 use App\Models\Status;
 use App\Models\Tag;
 use App\Models\Task;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -27,17 +27,9 @@ class TaskController extends Controller
         return view('tasks.create', compact('tags', 'statuses'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'due_date' => ['required', 'date'],
-            'tag_id' => ['required', 'exists:tags,id'],
-            'status_id' => ['nullable', 'exists:statuses,id'],
-            'estimated_minutes' => ['nullable', 'integer', 'min:1', 'max:6000'],
-            'progress' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'image' => ['nullable', 'image', 'max:2048'],
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             $validated['image_path'] = $request->file('image')->store('tasks', 'public');
