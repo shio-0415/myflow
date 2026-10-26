@@ -13,6 +13,12 @@
                 <a href="{{ route('tasks.create') }}" class="inline-block px-4 py-2 bg-gray-800 text-white rounded">＋ タスクを登録する</a>
             </div>
 
+            <div class="mb-4 grid grid-cols-3 gap-3 text-center">
+                <div class="p-3 bg-white shadow-sm rounded-lg"><p class="text-sm text-gray-600">未完了</p><p class="text-2xl font-bold">{{ $counts[\App\Models\Status::NOT_STARTED] ?? 0 }}</p></div>
+                <div class="p-3 bg-white shadow-sm rounded-lg"><p class="text-sm text-gray-600">進行中</p><p class="text-2xl font-bold">{{ $counts[\App\Models\Status::IN_PROGRESS] ?? 0 }}</p></div>
+                <div class="p-3 bg-white shadow-sm rounded-lg"><p class="text-sm text-gray-600">完了</p><p class="text-2xl font-bold">{{ $counts[\App\Models\Status::DONE] ?? 0 }}</p></div>
+            </div>
+
             <form method="GET" action="{{ route('tasks.index') }}" class="mb-6 p-4 bg-white shadow-sm rounded-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                     <label for="search" class="block text-sm font-medium">キーワード</label>
@@ -64,7 +70,7 @@
             @else
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($tasks as $task)
-                        <x-task-card :task="$task" :favorited="in_array($task->id, $favoriteIds)" />
+                        <x-task-card :task="$task" :favorited="in_array($task->id, $favoriteIds)" :daily-minutes="$dailyMinutes" />
                     @endforeach
                 </div>
             @endif

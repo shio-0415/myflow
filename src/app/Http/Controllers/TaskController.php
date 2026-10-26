@@ -42,7 +42,10 @@ class TaskController extends Controller
 
         $favoriteIds = auth()->user()->favoriteTasks()->pluck('tasks.id')->all();
 
-        return view('tasks.index', compact('tasks', 'tags', 'statuses', 'favoriteIds'));
+        $dailyMinutes = auth()->user()->daily_work_minutes;
+        $counts = Task::where('user_id', auth()->id())->selectRaw('status_id, count(*) as total')->groupBy('status_id')->pluck('total', 'status_id');
+
+        return view('tasks.index', compact('tasks', 'tags', 'statuses', 'favoriteIds', 'dailyMinutes', 'counts'));
     }
 
     public function create()
@@ -79,7 +82,9 @@ class TaskController extends Controller
 
         $isFavorited = auth()->user()->favoriteTasks()->where('task_id', $task->id)->exists();
 
-        return view('tasks.show', compact('task', 'isFavorited'));
+        $dailyMinutes = auth()->user()->daily_work_minutes;
+
+        return view('tasks.show', compact('task', 'isFavorited', 'dailyMinutes'));
     }
 
     public function edit(Task $task)

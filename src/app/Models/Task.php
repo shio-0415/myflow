@@ -47,4 +47,53 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'favorites');
     }
+
+    public function remainingEffortMinutes(): ?int
+    {
+        if ($this->estimated_minutes === null) {
+            return null;
+        }
+
+        $progress = $this->progress ?? 0;
+
+        return (int) round($this->estimated_minutes * (100 - $progress) / 100);
+    }
+
+    public function availableMinutes(int $dailyMinutes): int
+    {
+        $minutesUntilDue = now()->diffInMinutes($this->due_date, false);
+
+        if ($minutesUntilDue <= 0) {
+            return 0;
+        }
+
+        return (int) floor($minutesUntilDue / 1440 * $dailyMinutes);
+    }
+
+    public static function formatMinutes(int $minutes): string
+    {
+        $h = intdiv($minutes, 60);
+        $m = $minutes % 60;
+
+        if ($h > 0 && $m > 0) {
+            return $h . '時間' . $m . '分';
+        }
+
+        return $h > 0 ? $h . '時間' : $m . '分';
+    }
+
+    public function isAtRisk(int $dailyMinutes): bool
+    {
+        if ((int) $this->status_id === Status::DONE) {
+            return false;
+        }
+
+        $remaining = $this->remainingEffortMinutes();
+
+        if ($remaining === null || $remaining <= 0) {
+            return false;
+        }
+
+        return $this->availableMinutes($dailyMinutes) < $remaining;
+    }
 }

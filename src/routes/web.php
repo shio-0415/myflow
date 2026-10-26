@@ -23,3 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::post('tasks/{task}/favorite', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('tasks.favorite');
     Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('settings', [\App\Http\Controllers\SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('settings', [\App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
+});

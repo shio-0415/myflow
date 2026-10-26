@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
             Tag::firstOrCreate(['name' => $name]);
         }
 
-        foreach (['未着手', '進行中', '完了'] as $name) {
+        foreach (['未完了', '進行中', '完了'] as $name) {
             Status::firstOrCreate(['name' => $name]);
         }
     }

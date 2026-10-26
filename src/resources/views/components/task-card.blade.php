@@ -1,6 +1,15 @@
-@props(['task', 'favorited' => false])
+@props(['task', 'favorited' => false, 'dailyMinutes' => 120])
 
-<a href="{{ route('tasks.show', $task) }}" class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+@php
+    $atRisk = $task->isAtRisk($dailyMinutes);
+    $statusClass = match ((int) $task->status_id) {
+        \App\Models\Status::DONE => 'bg-green-100 text-green-800',
+        \App\Models\Status::IN_PROGRESS => 'bg-blue-100 text-blue-800',
+        default => 'bg-gray-100 text-gray-800',
+    };
+@endphp
+
+<a href="{{ route('tasks.show', $task) }}" class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition {{ $atRisk ? 'ring-2 ring-red-400' : '' }}">
     @if ($task->image_path)
         <img src="{{ asset('storage/' . $task->image_path) }}" alt="{{ $task->title }}" class="w-full h-32 object-cover">
     @endif
@@ -13,11 +22,19 @@
             @endif
         </div>
 
+        @if ($atRisk)
+            <p class="text-sm font-semibold text-red-600">⚠ 間に合わない可能性</p>
+        @endif
+
         <p class="text-sm text-gray-600">期限：{{ $task->due_date->format('Y/m/d H:i') }}</p>
 
+        @if ($task->estimated_minutes)
+            <p class="text-sm text-gray-600">工数：{{ \App\Models\Task::formatMinutes($task->estimated_minutes) }}</p>
+        @endif
+
         <div class="flex flex-wrap items-center gap-2 text-xs">
-            <span class="px-2 py-1 rounded-full {{ $task->tag->name === '就活' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800' }}">{{ $task->tag->name }}</span>
-            <span class="px-2 py-1 rounded-full {{ $task->status_id === 3 ? 'bg-green-100 text-green-800' : ($task->status_id === 2 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">{{ $task->status->name }}</span>
+            <span class="px-2 py-1 rounded-full bg-gray-100 text-gray-800">{{ $task->tag->name }}</span>
+            <span class="px-2 py-1 rounded-full {{ $statusClass }}">{{ $task->status->name }}</span>
         </div>
     </div>
 </a>
