@@ -81,13 +81,14 @@ class TaskController extends Controller
     {
         $this->authorize('view', $task);
 
-        $task->load(['tag', 'status']);
+        $task->load(['tag', 'status', 'subtasks.status']);
+        $statuses = Status::all();
 
         $isFavorited = auth()->user()->favoriteTasks()->where('task_id', $task->id)->exists();
 
         $dailyMinutes = auth()->user()->daily_work_minutes;
 
-        return view('tasks.show', compact('task', 'isFavorited', 'dailyMinutes'));
+        return view('tasks.show', compact('task', 'isFavorited', 'dailyMinutes', 'statuses'));
     }
 
     public function edit(Task $task)

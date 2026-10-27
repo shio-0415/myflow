@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
@@ -43,9 +44,27 @@ class Task extends Model
         return $this->belongsTo(Status::class);
     }
 
+    public function subtasks(): HasMany
+    {
+        return $this->hasMany(Subtask::class);
+    }
+
     public function favoritedBy(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorites');
+    }
+
+    public function syncProgressFromSubtasks(): void
+    {
+        $total = $this->subtasks()->count();
+
+        if ($total === 0) {
+            return;
+        }
+
+        $done = $this->subtasks()->where('status_id', Status::DONE)->count();
+
+        $this->update(['progress' => (int) round($done / $total * 100)]);
     }
 
     public function remainingEffortMinutes(): ?int

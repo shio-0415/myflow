@@ -28,3 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::get('settings', [\App\Http\Controllers\SettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [\App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::post('tasks/{task}/subtasks', [\App\Http\Controllers\SubtaskController::class, 'store'])->name('subtasks.store');
+    Route::put('subtasks/{subtask}', [\App\Http\Controllers\SubtaskController::class, 'update'])->name('subtasks.update');
+    Route::delete('subtasks/{subtask}', [\App\Http\Controllers\SubtaskController::class, 'destroy'])->name('subtasks.destroy');
+});
