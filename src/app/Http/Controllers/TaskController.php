@@ -37,7 +37,7 @@ class TaskController extends Controller
         }
 
         $tasks = $query->paginate(5)->withQueryString();
-        $tags = Tag::all();
+        $tags = Tag::visibleTo(auth()->id())->get();
         $statuses = Status::all();
 
         $favoriteIds = auth()->user()->favoriteTasks()->pluck('tasks.id')->all();
@@ -50,7 +50,7 @@ class TaskController extends Controller
 
     public function create()
     {
-        $tags = Tag::all();
+        $tags = Tag::visibleTo(auth()->id())->get();
         $statuses = Status::all();
 
         return view('tasks.create', compact('tags', 'statuses'));
@@ -60,13 +60,16 @@ class TaskController extends Controller
     {
         $validated = $request->validated();
 
+        $validated['tag_id'] = $this->resolveTagId($validated);
+        unset($validated['new_tag']);
+
         if ($request->hasFile('image')) {
             $validated['image_path'] = $request->file('image')->store('tasks', 'public');
         }
         unset($validated['image']);
 
         $validated['user_id'] = auth()->id();
-        $validated['status_id'] = $validated['status_id'] ?? 1;
+        $validated['status_id'] = $validated['status_id'] ?? Status::NOT_STARTED;
         $validated['progress'] = $validated['progress'] ?? 0;
 
         Task::create($validated);
@@ -91,7 +94,7 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
 
-        $tags = Tag::all();
+        $tags = Tag::visibleTo(auth()->id())->get();
         $statuses = Status::all();
 
         return view('tasks.edit', compact('task', 'tags', 'statuses'));
@@ -103,6 +106,9 @@ class TaskController extends Controller
 
         $validated = $request->validated();
 
+        $validated['tag_id'] = $this->resolveTagId($validated);
+        unset($validated['new_tag']);
+
         if ($request->hasFile('image')) {
             if ($task->image_path) {
                 Storage::disk('public')->delete($task->image_path);
@@ -113,9 +119,9 @@ class TaskController extends Controller
 
         $validated['progress'] = $validated['progress'] ?? 0;
 
-        if ((int) $validated['status_id'] === 3 && $task->completed_at === null) {
+        if ((int) $validated['status_id'] === Status::DONE && $task->completed_at === null) {
             $validated['completed_at'] = now();
-        } elseif ((int) $validated['status_id'] !== 3) {
+        } elseif ((int) $validated['status_id'] !== Status::DONE) {
             $validated['completed_at'] = null;
         }
 
@@ -135,5 +141,19 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect()->route('tasks.index')->with('status', 'タスクを削除しました。');
+    }
+
+    private function resolveTagId(array $validated): int
+    {
+        $newTag = trim($validated['new_tag'] ?? '');
+
+        if ($newTag === '') {
+            return (int) $validated['tag_id'];
+        }
+
+        $tag = Tag::visibleTo(auth()->id())->where('name', $newTag)->first()
+            ?? Tag::create(['name' => $newTag, 'user_id' => auth()->id()]);
+
+        return $tag->id;
     }
 }

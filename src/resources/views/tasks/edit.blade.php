@@ -4,8 +4,8 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <form method="POST" action="{{ route('tasks.update', $task) }}" enctype="multipart/form-data" class="bg-white p-6 shadow-sm sm:rounded-lg space-y-4">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <form method="POST" action="{{ route('tasks.update', $task) }}" enctype="multipart/form-data" class="bg-white p-6 shadow-sm rounded-lg space-y-4">
                 @csrf
                 @method('PUT')
 
@@ -29,6 +29,10 @@
                         @endforeach
                     </select>
                     @error('tag_id') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+
+                    <label for="new_tag" class="block text-sm text-gray-600 mt-2">または、新しいタグを作る（入力すると、こちらを使います）</label>
+                    <input id="new_tag" name="new_tag" type="text" maxlength="30" value="{{ old('new_tag') }}" class="w-full border-gray-300 rounded" placeholder="例：資格">
+                    @error('new_tag') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
@@ -42,9 +46,10 @@
                 </div>
 
                 <div>
-                    <label for="estimated_minutes" class="block font-medium">所要時間（分）</label>
-                    <input id="estimated_minutes" name="estimated_minutes" type="number" value="{{ old('estimated_minutes', $task->estimated_minutes) }}" class="w-full border-gray-300 rounded">
+                    <label for="estimated_minutes" class="block font-medium">工数（分）</label>
+                    <input id="estimated_minutes" name="estimated_minutes" type="number" step="30" min="30" value="{{ old('estimated_minutes', $task->estimated_minutes) }}" class="w-full border-gray-300 rounded">
                     @error('estimated_minutes') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    <p class="text-sm text-gray-500 mt-1">30分単位で入力できます。</p>
                 </div>
 
                 <div>
