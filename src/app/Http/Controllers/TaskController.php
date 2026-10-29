@@ -118,7 +118,13 @@ class TaskController extends Controller
         }
         unset($validated['image']);
 
-        $validated['progress'] = $validated['progress'] ?? 0;
+        if ($task->subtasks()->exists()) {
+            unset($validated['progress']);
+        } elseif ((int) $validated['status_id'] === Status::DONE) {
+            $validated['progress'] = 100;
+        } else {
+            $validated['progress'] = $validated['progress'] ?? 0;
+        }
 
         if ((int) $validated['status_id'] === Status::DONE && $task->completed_at === null) {
             $validated['completed_at'] = now();

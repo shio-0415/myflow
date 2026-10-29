@@ -9,11 +9,12 @@
                 <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">{{ session('status') }}</div>
             @endif
 
-            <form method="POST" action="{{ route('settings.update') }}" class="bg-white p-6 shadow-sm rounded-lg space-y-4">
+            <form method="POST" action="{{ route('settings.update') }}" class="bg-white p-6 shadow-sm rounded-lg space-y-6">
                 @csrf
                 @method('PUT')
 
                 <div>
+                    <h3 class="font-semibold mb-2">警告</h3>
                     <label for="daily_work_minutes" class="block font-medium">1日に作業できる時間</label>
                     <select id="daily_work_minutes" name="daily_work_minutes" class="w-full border-gray-300 rounded">
                         @for ($m = 30; $m <= 720; $m += 30)
@@ -27,6 +28,23 @@
                     </select>
                     @error('daily_work_minutes') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
                     <p class="mt-2 text-sm text-gray-600">「期限までの日数 × この時間」が、タスクの残りの工数より少ないと、警告を出します。</p>
+                </div>
+
+                <div class="pt-4 border-t border-gray-200">
+                    <h3 class="font-semibold mb-2">メール通知</h3>
+
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="notify_enabled" value="1" @checked(old('notify_enabled', $user->notify_enabled)) class="rounded border-gray-300">
+                        <span>メール通知を受け取る</span>
+                    </label>
+
+                    <div class="mt-3">
+                        <label for="notify_email" class="block font-medium">通知先メールアドレス</label>
+                        <input id="notify_email" name="notify_email" type="email" value="{{ old('notify_email', $user->notify_email) }}" class="w-full border-gray-300 rounded">
+                        @error('notify_email') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <p class="mt-2 text-sm text-gray-500">※ メールの送信は、現在、準備中です。設定は保存されますが、まだ届きません。</p>
                 </div>
 
                 <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded">保存する</button>

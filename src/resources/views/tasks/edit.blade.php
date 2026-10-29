@@ -53,9 +53,14 @@
                 </div>
 
                 <div>
-                    <label for="progress" class="block font-medium">進捗（0〜100%）</label>
-                    <input id="progress" name="progress" type="number" value="{{ old('progress', $task->progress) }}" class="w-full border-gray-300 rounded">
-                    @error('progress') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    @if ($task->subtasks()->exists())
+                        <p class="block font-medium">進捗</p>
+                        <p class="mt-1">{{ $task->progress }}%（サブタスクから自動計算）</p>
+                    @else
+                        <label for="progress" class="block font-medium">進捗（0〜100%）</label>
+                        <input id="progress" name="progress" type="number" value="{{ old('progress', $task->progress) }}" class="w-full border-gray-300 rounded">
+                        @error('progress') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    @endif
                 </div>
 
                 <div>

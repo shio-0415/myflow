@@ -15,10 +15,13 @@ class SettingController extends Controller
     {
         $validated = $request->validate([
             'daily_work_minutes' => ['required', 'integer', 'min:30', 'max:720', 'multiple_of:30'],
+            'notify_email' => ['nullable', 'email', 'max:255', 'required_with:notify_enabled'],
         ]);
 
         $user = auth()->user();
         $user->daily_work_minutes = $validated['daily_work_minutes'];
+        $user->notify_enabled = $request->boolean('notify_enabled');
+        $user->notify_email = $validated['notify_email'] ?? null;
         $user->save();
 
         return redirect()->route('settings.edit')->with('status', '設定を保存しました。');

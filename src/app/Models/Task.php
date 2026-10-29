@@ -59,6 +59,7 @@ class Task extends Model
         $total = $this->subtasks()->count();
 
         if ($total === 0) {
+            $this->update(['progress' => 0]);
             return;
         }
 
