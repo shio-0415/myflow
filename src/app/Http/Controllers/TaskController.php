@@ -30,11 +30,12 @@ class TaskController extends Controller
         }
 
         $sort = $request->get('sort', 'due_asc');
-        if ($sort === 'due_desc') {
-            $query->orderBy('due_date', 'desc');
-        } else {
-            $query->orderBy('due_date', 'asc');
-        }
+        match ($sort) {
+            'due_desc' => $query->orderBy('due_date', 'desc'),
+            'effort_desc' => $query->orderByRaw('estimated_minutes is null')->orderBy('estimated_minutes', 'desc')->orderBy('due_date', 'asc'),
+            'effort_asc' => $query->orderByRaw('estimated_minutes is null')->orderBy('estimated_minutes', 'asc')->orderBy('due_date', 'asc'),
+            default => $query->orderBy('due_date', 'asc'),
+        };
 
         $tasks = $query->paginate(5)->withQueryString();
         $tags = Tag::visibleTo(auth()->id())->get();

@@ -52,6 +52,8 @@
                     <select id="sort" name="sort" class="w-full border-gray-300 rounded">
                         <option value="due_asc" @selected(request('sort', 'due_asc') === 'due_asc')>期限が近い順</option>
                         <option value="due_desc" @selected(request('sort') === 'due_desc')>期限が遠い順</option>
+                        <option value="effort_desc" @selected(request('sort') === 'effort_desc')>工数が多い順</option>
+                        <option value="effort_asc" @selected(request('sort') === 'effort_asc')>工数が少ない順</option>
                     </select>
                 </div>
 
