@@ -36,13 +36,15 @@
                 </div>
 
                 <div>
-                    <label for="status_id" class="block text-sm font-medium">状態</label>
-                    <select id="status_id" name="status_id" class="w-full border-gray-300 rounded">
-                        <option value="">すべて</option>
+                    <span class="block text-sm font-medium">状態（複数選べます）</span>
+                    <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1">
                         @foreach ($statuses as $status)
-                            <option value="{{ $status->id }}" @selected(request('status_id') == $status->id)>{{ $status->name }}</option>
+                            <label class="inline-flex items-center gap-1 text-sm">
+                                <input type="checkbox" name="status_id[]" value="{{ $status->id }}" @checked(in_array((string) $status->id, array_map('strval', (array) request('status_id', [])), true)) class="rounded border-gray-300">
+                                <span>{{ $status->name }}</span>
+                            </label>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
 
                 <div>

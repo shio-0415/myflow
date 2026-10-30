@@ -26,7 +26,7 @@ class TaskController extends Controller
         }
 
         if ($request->filled('status_id')) {
-            $query->where('status_id', $request->status_id);
+            $query->whereIn('status_id', (array) $request->status_id);
         }
 
         $sort = $request->get('sort', 'due_asc');
