@@ -15,12 +15,13 @@ class SettingController extends Controller
     {
         $validated = $request->validate([
             'daily_work_minutes' => ['required', 'integer', 'min:30', 'max:720', 'multiple_of:30'],
-            'notify_email' => ['nullable', 'email', 'max:255', 'required_with:notify_enabled'],
+            'notify_email' => ['nullable', 'email', 'max:255', 'required_with:notify_deadline,notify_warning'],
         ]);
 
         $user = auth()->user();
         $user->daily_work_minutes = $validated['daily_work_minutes'];
-        $user->notify_enabled = $request->boolean('notify_enabled');
+        $user->notify_deadline = $request->boolean('notify_deadline');
+        $user->notify_warning = $request->boolean('notify_warning');
         $user->notify_email = $validated['notify_email'] ?? null;
         $user->save();
 

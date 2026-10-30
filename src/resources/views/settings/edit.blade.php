@@ -30,21 +30,32 @@
                     <p class="mt-2 text-sm text-gray-600">「期限までの日数 × この時間」が、タスクの残りの工数より少ないと、警告を出します。</p>
                 </div>
 
-                <div class="pt-4 border-t border-gray-200">
-                    <h3 class="font-semibold mb-2">メール通知</h3>
+                <div class="pt-4 border-t border-gray-200 space-y-3">
+                    <h3 class="font-semibold">メール通知</h3>
 
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" name="notify_enabled" value="1" @checked(old('notify_enabled', $user->notify_enabled)) class="rounded border-gray-300">
-                        <span>メール通知を受け取る</span>
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" name="notify_warning" value="1" @checked(old('notify_warning', $user->notify_warning)) class="mt-1 rounded border-gray-300">
+                        <span>
+                            <span class="block">警告が出たらすぐ通知</span>
+                            <span class="block text-sm text-gray-500">工数が期限を超えそうになった時点で、メールします。</span>
+                        </span>
                     </label>
 
-                    <div class="mt-3">
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" name="notify_deadline" value="1" @checked(old('notify_deadline', $user->notify_deadline)) class="mt-1 rounded border-gray-300">
+                        <span>
+                            <span class="block">期限の前日に通知</span>
+                            <span class="block text-sm text-gray-500">前日の20:00に、未完了・進行中のタスクをお知らせします。</span>
+                        </span>
+                    </label>
+
+                    <div>
                         <label for="notify_email" class="block font-medium">通知先メールアドレス</label>
                         <input id="notify_email" name="notify_email" type="email" value="{{ old('notify_email', $user->notify_email) }}" class="w-full border-gray-300 rounded">
                         @error('notify_email') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <p class="mt-2 text-sm text-gray-500">※ メールの送信は、現在、準備中です。設定は保存されますが、まだ届きません。</p>
+                    <p class="text-sm text-gray-500">※ メールの送信は、現在、準備中です。設定は保存されますが、まだ届きません。</p>
                 </div>
 
                 <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded">保存する</button>
