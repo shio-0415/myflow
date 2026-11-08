@@ -1,0 +1,17 @@
+.git
+docs
+screenshots
+src/.env
+src/.env.*
+src/vendor
+src/node_modules
+src/public/build
+src/public/hot
+src/public/storage
+src/storage/logs/*
+src/storage/framework/cache/data/*
+src/storage/framework/sessions/*
+src/storage/framework/views/*
+src/storage/app/public/*
+src/bootstrap/cache/*.php
+src/database/*.sqlite
